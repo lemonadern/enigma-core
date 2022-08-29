@@ -1,4 +1,4 @@
-pub mod modulo26;
+pub mod mod26;
 pub mod rotor;
 
 #[cfg(test)]
