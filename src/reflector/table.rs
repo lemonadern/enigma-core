@@ -15,13 +15,13 @@ impl ReflectorTable {
 
         let mut reflector_table = HashMap::new();
 
-        for pair in &map {
-            reflector_table.insert(*pair.0, *pair.1);
+        for (&key, &value) in &map {
+                        reflector_table.insert(key, value);
         }
-        for pair in map {
+        for (&key, &value) in &map {
             // key, value が逆向きのペアを追加する
             // value - value 間、 key - value 間 の値の重複を検出する
-            if let Some(v) = reflector_table.insert(pair.1, pair.0) {
+            if let Some(v) = reflector_table.insert(value, key) {
                 return Err(Error::new(
                     ErrorKind::InvalidInput,
                     format!("duplicate key: {}", v),
