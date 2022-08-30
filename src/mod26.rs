@@ -4,12 +4,12 @@ impl Mod26 {
     pub fn new(i: u64) -> Self {
         Self(i % 26)
     }
-    
+
     fn add(self, other: u64) -> Self {
         let sum = self.0 + other;
         Self(sum % 26)
     }
-    
+
     fn sub(self, other: u64) -> Self {
         let diff = self.0 as i64 - other as i64;
         let diff = if diff < 0 { diff + 26 } else { diff };
