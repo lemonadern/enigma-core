@@ -1,4 +1,7 @@
-use std::{collections::HashMap,io::{Error, ErrorKind}};
+use std::{
+    collections::HashMap,
+    io::{Error, ErrorKind},
+};
 
 use crate::mod26::Mod26;
 
@@ -14,17 +17,11 @@ pub struct Rotor {
 impl Rotor {
     pub fn new(offset: Mod26, map: Mod26Map) -> Result<Self, Error> {
         if map.len() != 26 {
-            return Err(Error::new(
-                ErrorKind::InvalidInput,
-                "map length must be 26",
-            ));
+            return Err(Error::new(ErrorKind::InvalidInput, "map length must be 26"));
         }
-        let reverse_map: HashMap<Mod26,Mod26> = map.iter().map(|(&k, &v)| (v, k)).collect();
+        let reverse_map: HashMap<Mod26, Mod26> = map.iter().map(|(&k, &v)| (v, k)).collect();
         if reverse_map.len() != 26 {
-            return Err(Error::new(
-                ErrorKind::InvalidInput,
-                "map value duplicated",
-            ));
+            return Err(Error::new(ErrorKind::InvalidInput, "map value duplicated"));
         }
         Ok(Self {
             offset,
@@ -61,7 +58,6 @@ mod tests {
             map.insert(Mod26::new(i), Mod26::new(i + 2));
         }
         let mut rotor = Rotor::new(offset, map).unwrap();
-
 
         let zero = Mod26::new(0);
         let one = Mod26::new(1);

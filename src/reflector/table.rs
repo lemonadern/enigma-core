@@ -16,7 +16,7 @@ impl ReflectorTable {
         let mut reflector_table = HashMap::new();
 
         for (&key, &value) in &map {
-                        reflector_table.insert(key, value);
+            reflector_table.insert(key, value);
         }
         for (&key, &value) in &map {
             // key, value が逆向きのペアを追加する

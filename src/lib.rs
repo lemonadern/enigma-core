@@ -1,7 +1,7 @@
 pub mod mod26;
+pub mod plugboard;
 pub mod reflector;
 pub mod rotor;
-pub mod plugboard;
 
 #[cfg(test)]
 extern crate speculate;

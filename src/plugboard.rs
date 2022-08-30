@@ -1,9 +1,12 @@
-use std::{collections::HashMap, io::{ErrorKind, Error}};
+use std::{
+    collections::HashMap,
+    io::{Error, ErrorKind},
+};
 
 use crate::mod26::Mod26;
 
-pub struct PlugBoard{
-    map: HashMap<Mod26, Mod26>
+pub struct PlugBoard {
+    map: HashMap<Mod26, Mod26>,
 }
 
 impl PlugBoard {
@@ -17,7 +20,7 @@ impl PlugBoard {
                 return Err(Error::new(
                     ErrorKind::InvalidInput,
                     format!("duplicate key: {}", v),
-                ))
+                ));
             }
         }
         Ok(Self { map })
@@ -25,7 +28,7 @@ impl PlugBoard {
 
     pub fn substitute(&self, input: Mod26) -> Mod26 {
         // 換字テーブルになければ短絡する
-        self.map.get(&input).cloned().unwrap_or(input)    
+        self.map.get(&input).cloned().unwrap_or(input)
     }
 }
 
