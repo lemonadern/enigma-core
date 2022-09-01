@@ -38,15 +38,15 @@ impl Scrambler {
 
         let encrypted_key = Key::from_mod26(x);
 
-        if self.rotor2.is_rotated() {
-            self.rotor3.increment_offset();
-        }
-
+        self.rotor1.increment_offset();
+        
         if self.rotor1.is_rotated() {
             self.rotor2.increment_offset();
         }
-
-        self.rotor1.increment_offset();
+        
+        if self.rotor2.is_rotated() {
+            self.rotor3.increment_offset();
+        }
 
         encrypted_key.to_char()
     }

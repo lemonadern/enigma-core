@@ -3,11 +3,11 @@ use std::collections::HashMap;
 use enigma_core::{mod26::Mod26, plugboard::PlugBoard, rotor::Rotor, scrambler::Scrambler};
 
 fn main() {
-    let raw = "helloworld";
+    let raw = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
     let rotor1 = Rotor::from_str(Mod26::new(4), "zyxwvutsrqponmlkjihgfedcba").unwrap();
-    let rotor2 = Rotor::from_str(Mod26::new(0), "cdefghijklmnopqrstuvwxyzab").unwrap();
-    let rotor3 = Rotor::from_str(Mod26::new(0), "efghijklmnopqrstuvwxyzabcd").unwrap();
+    let rotor2 = Rotor::from_str(Mod26::new(0), "kyxwvutsrqponmlazihgfedcbj").unwrap();
+    let rotor3 = Rotor::from_str(Mod26::new(2), "zyxwvutsrqponmlkjihgfedcba").unwrap();
 
     let mut plugboard_pairs = HashMap::new();
     plugboard_pairs.insert(Mod26::new(0), Mod26::new(1));
@@ -19,8 +19,8 @@ fn main() {
     let encrypted = scrambler1.scramble(raw);
 
     let rotor1 = Rotor::from_str(Mod26::new(4), "zyxwvutsrqponmlkjihgfedcba").unwrap();
-    let rotor2 = Rotor::from_str(Mod26::new(0), "cdefghijklmnopqrstuvwxyzab").unwrap();
-    let rotor3 = Rotor::from_str(Mod26::new(0), "efghijklmnopqrstuvwxyzabcd").unwrap();
+    let rotor2 = Rotor::from_str(Mod26::new(0), "kyxwvutsrqponmlazihgfedcbj").unwrap();
+    let rotor3 = Rotor::from_str(Mod26::new(2), "zyxwvutsrqponmlkjihgfedcba").unwrap();
 
     let mut plugboard_pairs = HashMap::new();
     plugboard_pairs.insert(Mod26::new(0), Mod26::new(1));
