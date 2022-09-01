@@ -67,12 +67,12 @@ impl Scrambler {
             self.rotor3.increment_offset();
             println!("rotor3 incremented!");
         }
-        
+
         if self.rotor1.is_rotated() {
             self.rotor2.increment_offset();
             println!("rotor2 incremented!");
         }
-        
+
         self.rotor1.increment_offset();
         println!("rotor1 incrementned!");
 
