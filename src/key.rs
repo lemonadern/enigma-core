@@ -1,6 +1,6 @@
 use crate::mod26::Mod26;
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, Copy, Eq ,PartialEq, Hash)]
 pub enum Key {
     A,
     B,

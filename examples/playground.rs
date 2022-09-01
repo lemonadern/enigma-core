@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use enigma_core::{mod26::Mod26, plugboard::PlugBoard, rotor::Rotor, scrambler::Scrambler};
+use enigma_core::{mod26::Mod26, plugboard::PlugBoard, rotor::Rotor, scrambler::Scrambler, key::Key};
 
 fn main() {
     let raw = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -10,7 +10,7 @@ fn main() {
     let rotor3 = Rotor::from_str(Mod26::new(2), "zyxwvutsrqponmlkjihgfedcba").unwrap();
 
     let mut plugboard_pairs = HashMap::new();
-    plugboard_pairs.insert(Mod26::new(0), Mod26::new(1));
+    plugboard_pairs.insert(Key::A, Key::B);
 
     let plugboard = PlugBoard::new(plugboard_pairs).unwrap();
 
@@ -23,7 +23,7 @@ fn main() {
     let rotor3 = Rotor::from_str(Mod26::new(2), "zyxwvutsrqponmlkjihgfedcba").unwrap();
 
     let mut plugboard_pairs = HashMap::new();
-    plugboard_pairs.insert(Mod26::new(0), Mod26::new(1));
+    plugboard_pairs.insert(Key::A, Key::B);
 
     let plugboard = PlugBoard::new(plugboard_pairs).unwrap();
 

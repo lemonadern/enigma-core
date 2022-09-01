@@ -3,20 +3,20 @@ use std::{
     io::{Error, ErrorKind},
 };
 
-use crate::mod26::Mod26;
+use crate::{mod26::Mod26, key::Key};
 
 pub struct PlugBoard {
     map: HashMap<Mod26, Mod26>,
 }
 
 impl PlugBoard {
-    pub fn new(pairs: HashMap<Mod26, Mod26>) -> Result<Self, Error> {
+    pub fn new(pairs: HashMap<Key, Key>) -> Result<Self, Error> {
         let mut map = HashMap::new();
         for (&k, &v) in &pairs {
-            map.insert(k, v);
+            map.insert(k.to_mod26(), v.to_mod26());
         }
         for (&k, &v) in &pairs {
-            if let Some(v) = map.insert(v, k) {
+            if let Some(v) = map.insert(v.to_mod26(), k.to_mod26()) {
                 return Err(Error::new(
                     ErrorKind::InvalidInput,
                     format!("duplicate key: {}", v),
@@ -38,9 +38,9 @@ mod tests {
     use std::collections::HashMap;
 
     #[test]
-    fn ペア0と1を渡したとき_0を1に_1を0にそれぞれ換字できる() {
+    fn ペアaとbを渡したとき_0を1に_1を0にそれぞれ換字できる() {
         let mut map = HashMap::new();
-        map.insert(Mod26::new(0), Mod26::new(1));
+        map.insert(Key::A, Key::B);
 
         let plugboard = PlugBoard::new(map).unwrap();
         assert_eq!(plugboard.substitute(Mod26::new(0)), Mod26::new(1));
@@ -50,8 +50,8 @@ mod tests {
     #[test]
     fn valueが重複しているmapを渡したとき初期化に失敗する() {
         let mut map = HashMap::new();
-        map.insert(Mod26::new(0), Mod26::new(2));
-        map.insert(Mod26::new(1), Mod26::new(2));
+        map.insert(Key::A, Key::C);
+        map.insert(Key::B, Key::C);
 
         let plugboard = PlugBoard::new(map);
         assert!(plugboard.is_err());
@@ -60,7 +60,7 @@ mod tests {
     #[test]
     fn keyとvalueが同じ値のペアがあるとき初期化に失敗する() {
         let mut map = HashMap::new();
-        map.insert(Mod26::new(0), Mod26::new(0));
+        map.insert(Key::A, Key::A);
 
         let plugboard = PlugBoard::new(map);
         assert!(plugboard.is_err());

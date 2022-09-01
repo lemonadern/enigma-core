@@ -76,7 +76,7 @@ mod tests {
         let rotor3 = Rotor::from_str(Mod26::new(0), "efghijklmnopqrstuvwxyzabcd").unwrap();
 
         let mut plugboard_pairs = HashMap::new();
-        plugboard_pairs.insert(Mod26::new(0), Mod26::new(1));
+        plugboard_pairs.insert(Key::A, Key::B);
 
         let plugboard = PlugBoard::new(plugboard_pairs).unwrap();
 
@@ -89,7 +89,7 @@ mod tests {
         let rotor3 = Rotor::from_str(Mod26::new(0), "efghijklmnopqrstuvwxyzabcd").unwrap();
 
         let mut plugboard_pairs = HashMap::new();
-        plugboard_pairs.insert(Mod26::new(0), Mod26::new(1));
+        plugboard_pairs.insert(Key::A, Key::B);
 
         let plugboard = PlugBoard::new(plugboard_pairs).unwrap();
 
@@ -108,7 +108,7 @@ mod tests {
         let rotor3 = Rotor::from_str(Mod26::new(0), "efghijklmnopqrstuvwxyzabcd").unwrap();
 
         let mut plugboard_pairs = HashMap::new();
-        plugboard_pairs.insert(Mod26::new(0), Mod26::new(1));
+        plugboard_pairs.insert(Key::A, Key::B);
 
         let plugboard = PlugBoard::new(plugboard_pairs).unwrap();
 
@@ -121,7 +121,7 @@ mod tests {
         let rotor3 = Rotor::from_str(Mod26::new(0), "efghijklmnopqrstuvwxyzabcd").unwrap();
 
         let mut plugboard_pairs = HashMap::new();
-        plugboard_pairs.insert(Mod26::new(0), Mod26::new(1));
+        plugboard_pairs.insert(Key::A, Key::B);
 
         let plugboard = PlugBoard::new(plugboard_pairs).unwrap();
 
