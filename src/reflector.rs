@@ -19,6 +19,13 @@ impl Reflector {
     }
 }
 
+impl Default for Reflector {
+    fn default() -> Self {
+        let table = ReflectorTable::default();
+        Self::new(table)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

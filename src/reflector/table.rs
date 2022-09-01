@@ -37,6 +37,17 @@ impl ReflectorTable {
     }
 }
 
+impl Default for ReflectorTable {
+    fn default() -> Self {
+        let mut map = HashMap::new();
+        // (i, 25 - i) i = 0..13
+        for i in 0..13 {
+            map.insert(Mod26::new(i), Mod26::new(25 - i));
+        }
+        Self::new(map).unwrap()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
