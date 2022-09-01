@@ -84,26 +84,22 @@ mod tests {
     use super::*;
 
     #[test]
-    fn 正常系() {
+    fn 表と裏でマッピングが対応している() {
         let offset = Mod26::new(0);
         let mut map = HashMap::new();
-        // (i, i+2) と対応するようなHashMap
+        // (i, 25-i) と対応するようなHashMap
         for i in 0..26 {
-            map.insert(Mod26::new(i), Mod26::new(i + 2));
+            map.insert(Mod26::new(i), Mod26::new(25 - i));
         }
-        let mut rotor = Rotor::new(offset, map).unwrap();
+        let rotor = Rotor::new(offset, map).unwrap();
 
         let zero = Mod26::new(0);
-        let one = Mod26::new(1);
-        let two = Mod26::new(2);
+        let twenty_five = Mod26::new(25);
 
-        // 0 -> 2 に対応
-        assert_eq!(rotor.forward_map[&zero], two);
-        // 2 -> 0 に対応
-        assert_eq!(rotor.reverse_map[&two], zero);
-
-        rotor.increment_offset();
-        assert_eq!(rotor.offset, one);
+        // 0 -> 25 に対応
+        assert_eq!(rotor.forward_map[&zero], twenty_five);
+        // 25 -> 0 に対応
+        assert_eq!(rotor.reverse_map[&twenty_five], zero);
     }
 
     #[test]
@@ -178,48 +174,39 @@ mod tests {
     }
 
     #[test]
-    fn offsetが0のとき_substitution() {
+    fn offsetが0のとき換字できる() {
         let zero = Mod26::new(0);
-        let one = Mod26::new(1);
+        let twenty_five = Mod26::new(25);
         let mut map = HashMap::new();
-        // (i, i+1) と対応するようなHashMap
+        // (i, 25-i) と対応するようなHashMap
         for i in 0..26 {
-            map.insert(Mod26::new(i), Mod26::new(i + 1));
+            map.insert(Mod26::new(i), Mod26::new(25 - i));
         }
 
         let rotor = Rotor::new(zero, map).unwrap();
 
         // 前から換字する
-        assert_eq!(rotor.substitute_from_forward(zero), one);
+        assert_eq!(rotor.substitute_from_forward(zero), twenty_five);
 
         // 後ろから換字する
-        assert_eq!(rotor.substitute_from_backward(one), zero);
+        assert_eq!(rotor.substitute_from_backward(twenty_five), zero);
     }
 
     #[test]
-    fn offsetが2のとき_substitution() {
+    fn offsetが2のとき換字できる() {
         let zero = Mod26::new(0);
-        let one = Mod26::new(1);
-        let two = Mod26::new(2);
+        let twenty_one = Mod26::new(21);
         let mut map = HashMap::new();
-        // (i, i+1) と対応するようなHashMap
+        // (i, 25-i) と対応するようなHashMap
         for i in 0..26 {
-            map.insert(Mod26::new(i), Mod26::new(i + 1));
+            map.insert(Mod26::new(i), Mod26::new(25 - i));
         }
-        let rotor = Rotor::new(two, map).unwrap();
+        let rotor = Rotor::new(Mod26::new(2), map).unwrap();
 
-        //     offset = 2
-        //     map = i -> i + 1
+        // 前から換字すると、 0 -> (2 -> 23 ->) 21
+        assert_eq!(rotor.substitute_from_forward(zero), twenty_one);
 
-        // 0 -> | 2 ->\    2 |
-        //      | 3    \-> 3 | -> 1
-        //      | 4        4 |
-        //      | 5        5 |
-
-        // 前から換字すると、 0 -> 1
-        assert_eq!(rotor.substitute_from_forward(zero), one);
-
-        // 後ろから換字すると、 1 -> 0
-        assert_eq!(rotor.substitute_from_backward(one), zero);
+        // 後ろから換字すると、 21 -> (23 -> 2 ->) 0
+        assert_eq!(rotor.substitute_from_backward(twenty_one), zero);
     }
 }
