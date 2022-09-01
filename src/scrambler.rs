@@ -22,59 +22,31 @@ impl Scrambler {
     fn scramble_char_by_char(&mut self, input: char) -> char {
         let key = Key::from_char(input);
 
-        println!("scramble start");
-        println!("{}:{}\n", key.to_char(), key.to_mod26());
-
-        println!("plugboard");
         let x = self.plugboard.substitute(key.to_mod26());
-        println!("{}:{}\n", Key::from_mod26(x).to_char(), x);
 
-        println!("rotor");
         let x = self.rotor1.substitute_from_forward(x);
-        print!("rotor1 offset:{} ", self.rotor1.offset);
-        println!("{}:{}", Key::from_mod26(x).to_char(), x);
         let x = self.rotor2.substitute_from_forward(x);
-        print!("rotor2 offset:{} ", self.rotor2.offset);
-        println!("{}:{}", Key::from_mod26(x).to_char(), x);
         let x = self.rotor3.substitute_from_forward(x);
-        print!("rotor3 offset:{} ", self.rotor3.offset);
-        println!("{}:{}\n", Key::from_mod26(x).to_char(), x);
 
-        println!("reflector");
         let x = self.reflector.substitute(x);
-        println!("{}:{}\n", Key::from_mod26(x).to_char(), x);
 
-        println!("rotor");
         let x = self.rotor3.substitute_from_backward(x);
-        print!("rotor3 offset:{} ", self.rotor3.offset);
-        println!("{}:{}", Key::from_mod26(x).to_char(), x);
         let x = self.rotor2.substitute_from_backward(x);
-        print!("rotor2 offset:{} ", self.rotor2.offset);
-        println!("{}:{}", Key::from_mod26(x).to_char(), x);
         let x = self.rotor1.substitute_from_backward(x);
-        print!("rotor1 offset:{} ", self.rotor1.offset);
-        println!("{}:{}\n", Key::from_mod26(x).to_char(), x);
 
-        println!("plugboard");
         let x = self.plugboard.substitute(x);
-        println!("{}:{}\n", Key::from_mod26(x).to_char(), x);
 
         let encrypted_key = Key::from_mod26(x);
-        println!("{}:{}\n", Key::from_mod26(x).to_char(), x);
-        println!("scramble end");
 
         if self.rotor2.is_rotated() {
             self.rotor3.increment_offset();
-            println!("rotor3 incremented!");
         }
 
         if self.rotor1.is_rotated() {
             self.rotor2.increment_offset();
-            println!("rotor2 incremented!");
         }
 
         self.rotor1.increment_offset();
-        println!("rotor1 incrementned!");
 
         encrypted_key.to_char()
     }
