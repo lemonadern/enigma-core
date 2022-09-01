@@ -1,7 +1,7 @@
 pub mod key;
-pub mod mod26;
+mod mod26;
 pub mod plugboard;
-pub mod reflector;
+mod reflector;
 pub mod rotor;
 pub mod scrambler;
 
