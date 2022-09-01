@@ -10,9 +10,11 @@ type Mod26Map = HashMap<Position, Position>;
 
 pub struct Rotor {
     initial_position: Position,
-    offset: Mod26,
+    pub offset: Mod26,
     forward_map: Mod26Map,
     reverse_map: Mod26Map,
+    // インクリメントされたかどうか（初期位置から動いたかどうか）
+    pub has_incremented: bool,
 }
 
 impl Rotor {
@@ -29,6 +31,7 @@ impl Rotor {
             offset: initial_position,
             forward_map: map,
             reverse_map,
+            has_incremented: false,
         })
     }
 
@@ -45,7 +48,7 @@ impl Rotor {
             if code < b'a' || code > b'z' {
                 return Err(Error::new(ErrorKind::InvalidInput, "str must be lowercase"));
             }
-            let value = Mod26::new((code - b'A') as u64);
+            let value = Mod26::new((code - b'a') as u64);
             map.insert(key, value);
         }
         Self::new(initial_position, map)
@@ -53,10 +56,16 @@ impl Rotor {
 
     pub fn increment_offset(&mut self) {
         self.offset += Mod26(1);
+        // todo: refactor
+        self.has_incremented = true;
     }
 
-    pub fn is_at_initial_position(&self) -> bool {
+    fn is_at_initial_position(&self) -> bool {
         self.offset == self.initial_position
+    }
+
+    pub fn is_rotated(&self) -> bool {
+        self.has_incremented && self.is_at_initial_position()
     }
 
     pub fn substitute_from_forward(&self, input_position: Position) -> Position {
@@ -130,11 +139,11 @@ mod tests {
         // 正常系2
         let rotor = Rotor::from_str(offset, "zyxwvutsrqponmlkjihgfedcba");
         assert!(rotor.is_ok());
-        
+
         // 短い文字列のとき
         let rotor = Rotor::from_str(offset, "abc");
         assert!(rotor.is_err());
-        
+
         // 長い文字列のとき
         let rotor = Rotor::from_str(offset, "abcdefghijklmnopqrstuvwxyza");
         assert!(rotor.is_err());
@@ -146,7 +155,6 @@ mod tests {
         // 重複があるとき
         let rotor = Rotor::from_str(offset, "aaaaaaaaaaaaaaaaaaaaaaaaaa");
         assert!(rotor.is_err());
-
     }
 
     #[test]
