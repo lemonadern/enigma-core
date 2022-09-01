@@ -3,7 +3,7 @@ use std::{
     io::{Error, ErrorKind},
 };
 
-use crate::{mod26::Mod26, key::Key};
+use crate::{key::Key, mod26::Mod26};
 
 pub struct PlugBoard {
     map: HashMap<Mod26, Mod26>,
