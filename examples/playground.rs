@@ -3,14 +3,16 @@ use std::collections::HashMap;
 use enigma_core::{key::Key, plugboard::PlugBoard, rotor::Rotor, scrambler::Scrambler};
 
 fn main() {
-    let raw = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    let raw = "hello, world! mr. enigma";
 
-    let rotor1 = Rotor::from_str("zyxwvutsrqponmlkjihgfedcba").unwrap();
-    let rotor2 = Rotor::from_str("kyxwvutsrqponmlazihgfedcbj").unwrap();
-    let rotor3 = Rotor::from_str("zyxwvutsrqponmlkjihgfedcba").unwrap();
+    let rotor1 = Rotor::from_str_and_key("zyxwvutsrqponmlkjihgfedcba", Key::W).unwrap();
+    let rotor2 = Rotor::from_str_and_key("kyxwvutsrqponmlazihgfedcbj", Key::E).unwrap();
+    let rotor3 = Rotor::from_str_and_key("zyxwvutsrqponmlkjihgfedcba", Key::B).unwrap();
 
     let mut plugboard_pairs = HashMap::new();
     plugboard_pairs.insert(Key::A, Key::B);
+    plugboard_pairs.insert(Key::D, Key::Z);
+    plugboard_pairs.insert(Key::U, Key::T);
 
     let plugboard = PlugBoard::new(plugboard_pairs).unwrap();
 
@@ -18,12 +20,14 @@ fn main() {
 
     let encrypted = scrambler1.scramble(raw);
 
-    let rotor1 = Rotor::from_str("zyxwvutsrqponmlkjihgfedcba").unwrap();
-    let rotor2 = Rotor::from_str("kyxwvutsrqponmlazihgfedcbj").unwrap();
-    let rotor3 = Rotor::from_str("zyxwvutsrqponmlkjihgfedcba").unwrap();
+    let rotor1 = Rotor::from_str_and_key("zyxwvutsrqponmlkjihgfedcba", Key::W).unwrap();
+    let rotor2 = Rotor::from_str_and_key("kyxwvutsrqponmlazihgfedcbj", Key::E).unwrap();
+    let rotor3 = Rotor::from_str_and_key("zyxwvutsrqponmlkjihgfedcba", Key::B).unwrap();
 
     let mut plugboard_pairs = HashMap::new();
     plugboard_pairs.insert(Key::A, Key::B);
+    plugboard_pairs.insert(Key::D, Key::Z);
+    plugboard_pairs.insert(Key::U, Key::T);
 
     let plugboard = PlugBoard::new(plugboard_pairs).unwrap();
 

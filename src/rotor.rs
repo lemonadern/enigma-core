@@ -57,6 +57,12 @@ impl Rotor {
         Self::new(map)
     }
 
+    pub fn from_str_and_key(map_str: &str, key: Key) -> Result<Self, Error> {
+        let mut rotor = Self::from_str(map_str)?;
+        rotor.set_initial_position(key);
+        Ok(rotor)
+    }
+
     pub fn new_with_position(map: Mod26Map, initial_position: Key) -> Result<Self, Error> {
         let mut rotor = Self::new(map)?;
         rotor.set_initial_position(initial_position);

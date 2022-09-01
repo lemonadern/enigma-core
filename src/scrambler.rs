@@ -54,7 +54,10 @@ impl Scrambler {
     pub fn scramble(&mut self, input: &str) -> String {
         input
             .chars()
-            .map(|c| self.scramble_char_by_char(c))
+            .map(|c| match c {
+                'a'..='z' => self.scramble_char_by_char(c),
+                _ => c,                
+            } )
             .collect()
     }
 }
@@ -67,11 +70,15 @@ mod tests {
 
     #[test]
     fn scramble() {
-        let raw = "helloworld";
+        let raw = "hello world";
 
-        let rotor1 = Rotor::from_str("bcdefghijklmnopqrstuvwxyza").unwrap();
-        let rotor2 = Rotor::from_str("cdefghijklmnopqrstuvwxyzab").unwrap();
-        let rotor3 = Rotor::from_str("efghijklmnopqrstuvwxyzabcd").unwrap();
+        let mut rotor1 = Rotor::from_str("bcdefghijklmnopqrstuvwxyza").unwrap();
+        let mut rotor2 = Rotor::from_str("cdefghijklmnopqrstuvwxyzab").unwrap();
+        let mut rotor3 = Rotor::from_str("efghijklmnopqrstuvwxyzabcd").unwrap();
+
+        rotor1.set_initial_position(Key::E);
+        rotor2.set_initial_position(Key::N);
+        rotor3.set_initial_position(Key::G);
 
         let mut plugboard_pairs = HashMap::new();
         plugboard_pairs.insert(Key::A, Key::B);
@@ -82,9 +89,13 @@ mod tests {
 
         let encrypted = scrambler1.scramble(raw);
 
-        let rotor1 = Rotor::from_str("bcdefghijklmnopqrstuvwxyza").unwrap();
-        let rotor2 = Rotor::from_str("cdefghijklmnopqrstuvwxyzab").unwrap();
-        let rotor3 = Rotor::from_str("efghijklmnopqrstuvwxyzabcd").unwrap();
+        let mut rotor1 = Rotor::from_str("bcdefghijklmnopqrstuvwxyza").unwrap();
+        let mut rotor2 = Rotor::from_str("cdefghijklmnopqrstuvwxyzab").unwrap();
+        let mut rotor3 = Rotor::from_str("efghijklmnopqrstuvwxyzabcd").unwrap();
+
+        rotor1.set_initial_position(Key::E);
+        rotor2.set_initial_position(Key::N);
+        rotor3.set_initial_position(Key::G);
 
         let mut plugboard_pairs = HashMap::new();
         plugboard_pairs.insert(Key::A, Key::B);
