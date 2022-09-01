@@ -5,6 +5,10 @@ impl Mod26 {
         Self(i % 26)
     }
 
+    pub fn to_u64(&self) -> u64 {
+        self.0
+    }
+
     fn add(self, other: u64) -> Self {
         let sum = self.0 + other;
         Self(sum % 26)
@@ -14,6 +18,12 @@ impl Mod26 {
         let diff = self.0 as i64 - other as i64;
         let diff = if diff < 0 { diff + 26 } else { diff };
         Self(diff as u64)
+    }
+}
+
+impl Default for Mod26 {
+    fn default() -> Self {
+        Self(0)
     }
 }
 
@@ -56,6 +66,15 @@ mod tests {
         // 26 = 0
         let twenty_six = Mod26::new(26);
         assert_eq!(twenty_six, zero);
+    }
+
+    #[test]
+    fn u64に変換する() {
+        let zero = Mod26::new(0);
+        assert_eq!(zero.to_u64(), 0);
+
+        let twenty_five = Mod26::new(25);
+        assert_eq!(twenty_five.to_u64(), 25);
     }
 
     #[test]

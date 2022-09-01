@@ -3,22 +3,25 @@ use std::{
     io::{Error, ErrorKind},
 };
 
-use crate::mod26::Mod26;
+use crate::{key::Key, mod26::Mod26};
 
 type Position = Mod26;
 type Mod26Map = HashMap<Position, Position>;
 
 pub struct Rotor {
-    initial_position: Position,
-    pub offset: Mod26,
     forward_map: Mod26Map,
     reverse_map: Mod26Map,
+
     // インクリメントされたかどうか（初期位置から動いたかどうか）
     pub has_incremented: bool,
+    initial_position: Mod26,
+    pub offset: Mod26,
+    // ※ ロータの回転状態に関するものはここで持つべきではないかも
+    // todo: refactor
 }
 
 impl Rotor {
-    pub fn new(initial_position: Position, map: Mod26Map) -> Result<Self, Error> {
+    pub fn new(map: Mod26Map) -> Result<Self, Error> {
         if map.len() != 26 {
             return Err(Error::new(ErrorKind::InvalidInput, "map length must be 26"));
         }
@@ -27,15 +30,15 @@ impl Rotor {
             return Err(Error::new(ErrorKind::InvalidInput, "map value duplicated"));
         }
         Ok(Self {
-            initial_position,
-            offset: initial_position,
+            initial_position: Mod26::default(),
+            offset: Mod26::default(),
             forward_map: map,
             reverse_map,
             has_incremented: false,
         })
     }
 
-    pub fn from_str(initial_position: Position, map_str: &str) -> Result<Self, Error> {
+    pub fn from_str(map_str: &str) -> Result<Self, Error> {
         if map_str.len() != 26 {
             return Err(Error::new(ErrorKind::InvalidInput, "str length must be 26"));
         }
@@ -51,7 +54,19 @@ impl Rotor {
             let value = Mod26::new((code - b'a') as u64);
             map.insert(key, value);
         }
-        Self::new(initial_position, map)
+        Self::new(map)
+    }
+
+    pub fn new_with_position(map: Mod26Map, initial_position: Key) -> Result<Self, Error> {
+        let mut rotor = Self::new(map)?;
+        rotor.set_initial_position(initial_position);
+        Ok(rotor)
+    }
+
+    pub fn set_initial_position(&mut self, position: Key) {
+        let position = position.to_mod26();
+        self.initial_position = position;
+        self.offset = position;
     }
 
     pub fn increment_offset(&mut self) {
@@ -85,13 +100,12 @@ mod tests {
 
     #[test]
     fn 表と裏でマッピングが対応している() {
-        let offset = Mod26::new(0);
         let mut map = HashMap::new();
         // (i, 25-i) と対応するようなHashMap
         for i in 0..26 {
             map.insert(Mod26::new(i), Mod26::new(25 - i));
         }
-        let rotor = Rotor::new(offset, map).unwrap();
+        let rotor = Rotor::new(map).unwrap();
 
         let zero = Mod26::new(0);
         let twenty_five = Mod26::new(25);
@@ -104,63 +118,59 @@ mod tests {
 
     #[test]
     fn mapの要素数が25のとき初期化に失敗する() {
-        let offset = Mod26::new(0);
         let mut map = HashMap::new();
         for i in 0..25 {
             map.insert(Mod26::new(i), Mod26::new(i + 2));
         }
-        let rotor = Rotor::new(offset, map);
+        let rotor = Rotor::new(map);
         assert!(rotor.is_err());
     }
 
     #[test]
     fn valueに重複があるとき初期化に失敗する() {
-        let offset = Mod26::new(0);
         let mut map = HashMap::new();
         for i in 0..26 {
             map.insert(Mod26::new(i), Mod26::new(0));
         }
-        let rotor = Rotor::new(offset, map);
+        let rotor = Rotor::new(map);
         assert!(rotor.is_err());
     }
 
     #[test]
     fn strによる初期化() {
-        let offset = Mod26::new(0);
-
         // 正常系1
-        let rotor = Rotor::from_str(offset, "abcdefghijklmnopqrstuvwxyz");
+        let rotor = Rotor::from_str("abcdefghijklmnopqrstuvwxyz");
         assert!(rotor.is_ok());
 
         // 正常系2
-        let rotor = Rotor::from_str(offset, "zyxwvutsrqponmlkjihgfedcba");
+        let rotor = Rotor::from_str("zyxwvutsrqponmlkjihgfedcba");
         assert!(rotor.is_ok());
 
         // 短い文字列のとき
-        let rotor = Rotor::from_str(offset, "abc");
+        let rotor = Rotor::from_str("abc");
         assert!(rotor.is_err());
 
         // 長い文字列のとき
-        let rotor = Rotor::from_str(offset, "abcdefghijklmnopqrstuvwxyza");
+        let rotor = Rotor::from_str("abcdefghijklmnopqrstuvwxyza");
         assert!(rotor.is_err());
 
         // 小文字以外が混ざっているとき
-        let rotor = Rotor::from_str(offset, "abcdeFGHIJKLMNOPQRSTUVWXYZ");
+        let rotor = Rotor::from_str("abcdeFGHIJKLMNOPQRSTUVWXYZ");
         assert!(rotor.is_err());
 
         // 重複があるとき
-        let rotor = Rotor::from_str(offset, "aaaaaaaaaaaaaaaaaaaaaaaaaa");
+        let rotor = Rotor::from_str("aaaaaaaaaaaaaaaaaaaaaaaaaa");
         assert!(rotor.is_err());
     }
 
     #[test]
     fn offsetを26回インクリメントすると1回転する() {
-        let offset = Mod26::new(5);
+        let key = Key::A;
         let mut map = HashMap::new();
         for i in 0..26 {
             map.insert(Mod26::new(i), Mod26::new(i + 2));
         }
-        let mut rotor = Rotor::new(offset, map).unwrap();
+        let mut rotor = Rotor::new_with_position(map, key).unwrap();
 
         assert!(rotor.is_at_initial_position());
         for _ in 0..26 {
@@ -175,6 +185,7 @@ mod tests {
 
     #[test]
     fn offsetが0のとき換字できる() {
+        let offset = Mod26::new(0);
         let zero = Mod26::new(0);
         let twenty_five = Mod26::new(25);
         let mut map = HashMap::new();
@@ -183,7 +194,7 @@ mod tests {
             map.insert(Mod26::new(i), Mod26::new(25 - i));
         }
 
-        let rotor = Rotor::new(zero, map).unwrap();
+        let rotor = Rotor::new_with_position(map, Key::from_mod26(offset)).unwrap();
 
         // 前から換字する
         assert_eq!(rotor.substitute_from_forward(zero), twenty_five);
@@ -201,7 +212,7 @@ mod tests {
         for i in 0..26 {
             map.insert(Mod26::new(i), Mod26::new(25 - i));
         }
-        let rotor = Rotor::new(Mod26::new(2), map).unwrap();
+        let rotor = Rotor::new_with_position(map, Key::from_mod26(Mod26::new(2))).unwrap();
 
         // 前から換字すると、 0 -> (2 -> 23 ->) 21
         assert_eq!(rotor.substitute_from_forward(zero), twenty_one);

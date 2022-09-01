@@ -39,11 +39,11 @@ impl Scrambler {
         let encrypted_key = Key::from_mod26(x);
 
         self.rotor1.increment_offset();
-        
+
         if self.rotor1.is_rotated() {
             self.rotor2.increment_offset();
         }
-        
+
         if self.rotor2.is_rotated() {
             self.rotor3.increment_offset();
         }
@@ -63,17 +63,15 @@ impl Scrambler {
 mod tests {
     use std::collections::HashMap;
 
-    use crate::mod26::Mod26;
-
     use super::*;
 
     #[test]
     fn scramble() {
         let raw = "helloworld";
 
-        let rotor1 = Rotor::from_str(Mod26::new(0), "bcdefghijklmnopqrstuvwxyza").unwrap();
-        let rotor2 = Rotor::from_str(Mod26::new(0), "cdefghijklmnopqrstuvwxyzab").unwrap();
-        let rotor3 = Rotor::from_str(Mod26::new(0), "efghijklmnopqrstuvwxyzabcd").unwrap();
+        let rotor1 = Rotor::from_str("bcdefghijklmnopqrstuvwxyza").unwrap();
+        let rotor2 = Rotor::from_str("cdefghijklmnopqrstuvwxyzab").unwrap();
+        let rotor3 = Rotor::from_str("efghijklmnopqrstuvwxyzabcd").unwrap();
 
         let mut plugboard_pairs = HashMap::new();
         plugboard_pairs.insert(Key::A, Key::B);
@@ -84,9 +82,9 @@ mod tests {
 
         let encrypted = scrambler1.scramble(raw);
 
-        let rotor1 = Rotor::from_str(Mod26::new(0), "bcdefghijklmnopqrstuvwxyza").unwrap();
-        let rotor2 = Rotor::from_str(Mod26::new(0), "cdefghijklmnopqrstuvwxyzab").unwrap();
-        let rotor3 = Rotor::from_str(Mod26::new(0), "efghijklmnopqrstuvwxyzabcd").unwrap();
+        let rotor1 = Rotor::from_str("bcdefghijklmnopqrstuvwxyza").unwrap();
+        let rotor2 = Rotor::from_str("cdefghijklmnopqrstuvwxyzab").unwrap();
+        let rotor3 = Rotor::from_str("efghijklmnopqrstuvwxyzabcd").unwrap();
 
         let mut plugboard_pairs = HashMap::new();
         plugboard_pairs.insert(Key::A, Key::B);
@@ -103,9 +101,9 @@ mod tests {
     fn scramble_char_by_char() {
         let raw = 'a';
 
-        let rotor1 = Rotor::from_str(Mod26::new(0), "bcdefghijklmnopqrstuvwxyza").unwrap();
-        let rotor2 = Rotor::from_str(Mod26::new(0), "cdefghijklmnopqrstuvwxyzab").unwrap();
-        let rotor3 = Rotor::from_str(Mod26::new(0), "efghijklmnopqrstuvwxyzabcd").unwrap();
+        let rotor1 = Rotor::from_str("bcdefghijklmnopqrstuvwxyza").unwrap();
+        let rotor2 = Rotor::from_str("cdefghijklmnopqrstuvwxyzab").unwrap();
+        let rotor3 = Rotor::from_str("efghijklmnopqrstuvwxyzabcd").unwrap();
 
         let mut plugboard_pairs = HashMap::new();
         plugboard_pairs.insert(Key::A, Key::B);
@@ -116,9 +114,9 @@ mod tests {
 
         let encrypted = scrambler1.scramble_char_by_char(raw);
 
-        let rotor1 = Rotor::from_str(Mod26::new(0), "bcdefghijklmnopqrstuvwxyza").unwrap();
-        let rotor2 = Rotor::from_str(Mod26::new(0), "cdefghijklmnopqrstuvwxyzab").unwrap();
-        let rotor3 = Rotor::from_str(Mod26::new(0), "efghijklmnopqrstuvwxyzabcd").unwrap();
+        let rotor1 = Rotor::from_str("bcdefghijklmnopqrstuvwxyza").unwrap();
+        let rotor2 = Rotor::from_str("cdefghijklmnopqrstuvwxyzab").unwrap();
+        let rotor3 = Rotor::from_str("efghijklmnopqrstuvwxyzabcd").unwrap();
 
         let mut plugboard_pairs = HashMap::new();
         plugboard_pairs.insert(Key::A, Key::B);
