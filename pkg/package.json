@@ -1,0 +1,12 @@
+{
+  "name": "enigma_core",
+  "version": "0.1.0",
+  "files": [
+    "enigma_core_bg.wasm",
+    "enigma_core.js",
+    "enigma_core.d.ts"
+  ],
+  "module": "enigma_core.js",
+  "types": "enigma_core.d.ts",
+  "sideEffects": false
+}
