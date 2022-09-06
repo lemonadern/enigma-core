@@ -31,6 +31,10 @@ pub enum Key {
 }
 
 impl Key {
+    pub fn from_u64(n: u64) -> Self {
+        Key::from_mod26(Mod26::new(n))
+    }
+
     pub fn from_mod26(mod26: Mod26) -> Self {
         match mod26.0 {
             0 => Key::A,
