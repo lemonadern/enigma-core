@@ -56,8 +56,8 @@ impl Scrambler {
             .chars()
             .map(|c| match c {
                 'a'..='z' => self.scramble_char_by_char(c),
-                _ => c,                
-            } )
+                _ => c,
+            })
             .collect()
     }
 }
