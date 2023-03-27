@@ -63,6 +63,7 @@ impl Key {
         }
     }
 
+    #[deprecated]
     pub fn from_char(c: char) -> Self {
         match c {
             'a' => Key::A,
@@ -126,6 +127,7 @@ impl Key {
         }
     }
 
+    #[deprecated]
     pub fn to_char(&self) -> char {
         match self {
             Key::A => 'a',
@@ -158,10 +160,84 @@ impl Key {
     }
 }
 
+// TODO: TryFrom に変える
+impl From<char> for Key {
+    fn from(value: char) -> Self {
+        match value {
+            'a' => Key::A,
+            'b' => Key::B,
+            'c' => Key::C,
+            'd' => Key::D,
+            'e' => Key::E,
+            'f' => Key::F,
+            'g' => Key::G,
+            'h' => Key::H,
+            'i' => Key::I,
+            'j' => Key::J,
+            'k' => Key::K,
+            'l' => Key::L,
+            'm' => Key::M,
+            'n' => Key::N,
+            'o' => Key::O,
+            'p' => Key::P,
+            'q' => Key::Q,
+            'r' => Key::R,
+            's' => Key::S,
+            't' => Key::T,
+            'u' => Key::U,
+            'v' => Key::V,
+            'w' => Key::W,
+            'x' => Key::X,
+            'y' => Key::Y,
+            'z' => Key::Z,
+            _ => panic!("character must be a..z"),
+        }
+    }
+}
+
+impl Into<char> for Key {
+    fn into(self) -> char {
+        match self {
+            Key::A => 'a',
+            Key::B => 'b',
+            Key::C => 'c',
+            Key::D => 'd',
+            Key::E => 'e',
+            Key::F => 'f',
+            Key::G => 'g',
+            Key::H => 'h',
+            Key::I => 'i',
+            Key::J => 'j',
+            Key::K => 'k',
+            Key::L => 'l',
+            Key::M => 'm',
+            Key::N => 'n',
+            Key::O => 'o',
+            Key::P => 'p',
+            Key::Q => 'q',
+            Key::R => 'r',
+            Key::S => 's',
+            Key::T => 't',
+            Key::U => 'u',
+            Key::V => 'v',
+            Key::W => 'w',
+            Key::X => 'x',
+            Key::Y => 'y',
+            Key::Z => 'z',
+        }
+    }
+}
+
+impl Into<char> for &Key {
+    fn into(self) -> char {
+        Into::into(*self)
+    }
+}
+
 impl std::fmt::Display for Key {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let char = self.to_char();
-        write!(f, "{}", char)
+        let c: char = self.into();
+        write!(f, "{}", c)
     }
 }
 
@@ -192,9 +268,26 @@ mod tests {
     }
 
     #[test]
+    fn convert_from_char() {
+        // TryFrom に書き換える
+        let v = Key::from('c');
+        assert_eq!(v, Key::C);
+    }
+
+    #[test]
     fn charに変換できる() {
         let a = Key::A;
         let char = a.to_char();
         assert_eq!(char, 'a');
+    }
+
+    #[test]
+    fn convert_into_char() {
+        let v: char = Key::C.into();
+        assert_eq!(v, 'c');
+
+        let ref_key = &Key::C;
+        let w: char = ref_key.into();
+        assert_eq!(w, 'c')
     }
 }
