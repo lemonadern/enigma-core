@@ -31,6 +31,7 @@ pub enum Key {
 }
 
 impl Key {
+    #[deprecated]
     pub fn from_mod26(mod26: Mod26) -> Self {
         match mod26.0 {
             0 => Key::A,
@@ -198,37 +199,39 @@ impl From<Mod26> for Key {
     }
 }
 
-// TODO: TryFrom に変える
-impl From<char> for Key {
-    fn from(value: char) -> Self {
+impl TryFrom<char> for Key {
+    // TODO: define and use approriate error type
+    type Error = ();
+
+    fn try_from(value: char) -> Result<Self, Self::Error> {
         match value {
-            'a' => Key::A,
-            'b' => Key::B,
-            'c' => Key::C,
-            'd' => Key::D,
-            'e' => Key::E,
-            'f' => Key::F,
-            'g' => Key::G,
-            'h' => Key::H,
-            'i' => Key::I,
-            'j' => Key::J,
-            'k' => Key::K,
-            'l' => Key::L,
-            'm' => Key::M,
-            'n' => Key::N,
-            'o' => Key::O,
-            'p' => Key::P,
-            'q' => Key::Q,
-            'r' => Key::R,
-            's' => Key::S,
-            't' => Key::T,
-            'u' => Key::U,
-            'v' => Key::V,
-            'w' => Key::W,
-            'x' => Key::X,
-            'y' => Key::Y,
-            'z' => Key::Z,
-            _ => panic!("character must be a..z"),
+            'a' => Ok(Key::A),
+            'b' => Ok(Key::B),
+            'c' => Ok(Key::C),
+            'd' => Ok(Key::D),
+            'e' => Ok(Key::E),
+            'f' => Ok(Key::F),
+            'g' => Ok(Key::G),
+            'h' => Ok(Key::H),
+            'i' => Ok(Key::I),
+            'j' => Ok(Key::J),
+            'k' => Ok(Key::K),
+            'l' => Ok(Key::L),
+            'm' => Ok(Key::M),
+            'n' => Ok(Key::N),
+            'o' => Ok(Key::O),
+            'p' => Ok(Key::P),
+            'q' => Ok(Key::Q),
+            'r' => Ok(Key::R),
+            's' => Ok(Key::S),
+            't' => Ok(Key::T),
+            'u' => Ok(Key::U),
+            'v' => Ok(Key::V),
+            'w' => Ok(Key::W),
+            'x' => Ok(Key::X),
+            'y' => Ok(Key::Y),
+            'z' => Ok(Key::Z),
+            _ => Err(()),
         }
     }
 }
@@ -295,8 +298,7 @@ mod tests {
     #[test]
     fn convert_from_mod26() {
         let zero = Mod26::new(0);
-        let key_a = Key::from(zero);
-        assert_eq!(key_a, Key::A);
+        assert_eq!(Key::from(zero), Key::A);
     }
 
     #[deprecated]
@@ -316,10 +318,10 @@ mod tests {
     }
 
     #[test]
-    fn convert_from_char() {
-        // TryFrom に書き換える
-        let v = Key::from('c');
-        assert_eq!(v, Key::C);
+    fn try_convertion_from_char() {
+        assert_eq!(Key::try_from('c'), Ok(Key::C));
+
+        assert_eq!(Key::try_from('1'), Err(()));
     }
 
     #[deprecated]
