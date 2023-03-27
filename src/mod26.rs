@@ -100,4 +100,6 @@ mod tests {
         // 0 - 1 = 25
         assert_eq!(zero - one, Mod26(25));
     }
+
+    // TODO: from<key> の実装
 }

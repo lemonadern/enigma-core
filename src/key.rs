@@ -160,6 +160,44 @@ impl Key {
     }
 }
 
+impl From<Mod26> for Key {
+    fn from(value: Mod26) -> Self {
+        match value.0 {
+            0 => Key::A,
+            1 => Key::B,
+            2 => Key::C,
+            3 => Key::D,
+            4 => Key::E,
+            5 => Key::F,
+            6 => Key::G,
+            7 => Key::H,
+            8 => Key::I,
+            9 => Key::J,
+            10 => Key::K,
+            11 => Key::L,
+            12 => Key::M,
+            13 => Key::N,
+            14 => Key::O,
+            15 => Key::P,
+            16 => Key::Q,
+            17 => Key::R,
+            18 => Key::S,
+            19 => Key::T,
+            20 => Key::U,
+            21 => Key::V,
+            22 => Key::W,
+            23 => Key::X,
+            24 => Key::Y,
+            25 => Key::Z,
+            n @ _ => panic!(
+                // never
+                "mod26 never becomes an integer greater than or equal to 26. But got {}.",
+                n
+            ),
+        }
+    }
+}
+
 // TODO: TryFrom に変える
 impl From<char> for Key {
     fn from(value: char) -> Self {
@@ -246,6 +284,7 @@ mod tests {
 
     use super::*;
 
+    #[deprecated]
     #[test]
     fn mod26からkeyに変換できる() {
         let zero = Mod26::new(0);
@@ -254,12 +293,21 @@ mod tests {
     }
 
     #[test]
+    fn convert_from_mod26() {
+        let zero = Mod26::new(0);
+        let key_a = Key::from(zero);
+        assert_eq!(key_a, Key::A);
+    }
+
+    #[deprecated]
+    #[test]
     fn keyからmod26に変換できる() {
         let a = Key::A;
         let mod26 = a.to_mod26();
         assert_eq!(mod26, Mod26::new(0));
     }
 
+    #[deprecated]
     #[test]
     fn charからkeyに変換できる() {
         let c = 'a';
@@ -274,6 +322,7 @@ mod tests {
         assert_eq!(v, Key::C);
     }
 
+    #[deprecated]
     #[test]
     fn charに変換できる() {
         let a = Key::A;
